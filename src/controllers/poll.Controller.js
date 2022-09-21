@@ -10,7 +10,7 @@ async function postPoll(req, res) {
 
 async function getPoll(req, res) {
 
-    res.send('<h1>gerPoll</h1>');
+    res.send('<h1>getPoll</h1>');
 
 }
 
