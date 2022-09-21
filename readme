@@ -1,0 +1,6 @@
+A função desse projeto é ser uma Api de votos.
+
+Variaves de ambiente usadas:
+
+MONGO_URI configura a porta do mongo DB;
+PORT configura a porta da aplicação;
