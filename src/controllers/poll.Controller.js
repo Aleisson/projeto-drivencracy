@@ -2,6 +2,8 @@ import { STATUS_CODE } from "../enums/statusCode.enum.js";
 import { DATABASE_COLLECTIONS } from "../enums/databaseCollections.enum.js";
 import database from "../database/database.js";
 
+//dayjs().format("YYYY-MM-DDDD  HH:mm")
+
 async function postPoll(req, res) {
 
     res.send('<h1>postPoll</h1>');
