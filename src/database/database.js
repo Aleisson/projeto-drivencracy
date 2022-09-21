@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
-import { MongoClient, MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
-dotenv.config;
+dotenv.config();
 
 let database;
 

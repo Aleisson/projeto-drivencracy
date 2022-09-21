@@ -1,14 +1,15 @@
 import express from 'express';
+import { postPoll, getPoll, getPollIdChoice, getPollIdResult } from '../controllers/poll.Controller.js';
 
 const router = express.Router();
 
 //poll
-router.post('/poll', (req, res) => { });
-router.get('/poll', (req, res) => { });
+router.post('/poll', postPoll);
+router.get('/poll', getPoll);
 
 //poll/:id
-router.get('/poll/:id/choice', (req, res) => { });
-router.post('/poll/:id/result', (req, res)=> { });
+router.get('/poll/:id/choice', getPollIdChoice);
+router.get('/poll/:id/result', getPollIdResult);
 
 
 export default router;
