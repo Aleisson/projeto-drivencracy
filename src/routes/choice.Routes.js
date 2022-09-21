@@ -1,11 +1,13 @@
 import express, { application } from 'express';
+import { postChoice, postChoiceIdVote } from '../controllers/choice.Controller.js'
+
 
 const router = express.Router();
 
 
-router.post('/choice', (req, res) => { });
+router.post('/choice', postChoice);
 
-router.get('/choice/:id/vote', (req, res) => { });
+router.post('/choice/:id/vote', postChoiceIdVote);
 
 
 export default router;
