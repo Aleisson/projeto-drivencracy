@@ -1,12 +1,29 @@
-import { STATUS_CODE } from "../enums/statusCode.enum.js";
-import { DATABASE_COLLECTIONS } from "../enums/databaseCollections.enum.js";
+import { STATUS_CODE } from "../enums/statusCode.Enum.js";
+import { DATABASE_COLLECTIONS } from "../enums/databaseCollections.Enum.js";
 import database from "../database/database.js";
+import dayjs from 'dayjs';
 
-//dayjs().format("YYYY-MM-DDDD  HH:mm")
+
+
 
 async function postPoll(req, res) {
 
-    res.send('<h1>postPoll</h1>');
+    const { title, expireAt } = res.locals.poll;
+    console.log(expireAt);
+
+    try {
+
+        database.collection(DATABASE_COLLECTIONS.polls).insertOne({ title, expireAt });
+
+        res.sendStatus(STATUS_CODE.CREATED);
+        
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+    res.sendStatus(STATUS_CODE.CREATED);
 
 }
 

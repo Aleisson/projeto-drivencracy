@@ -3,7 +3,7 @@ import express from 'express';
 import { json } from 'express';
 import cors from 'cors';
 
-import { STATUS_CODE } from './enums/statusCode.enum.js';
+import { STATUS_CODE } from './enums/statusCode.Enum.js';
 import polls from './routes/poll.Routes.js';
 import choices from './routes/choice.Routes.js';
 

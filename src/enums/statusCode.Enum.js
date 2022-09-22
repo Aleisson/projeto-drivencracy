@@ -7,6 +7,7 @@ const STATUS_CODE = Object.freeze({
     NOT_FOUND:404,
     UNAUTHORIZED:401,
     CONFLICT:409,
+    UNPROCESSABLE:422,
     SERVER_ERROR:500
 
 });

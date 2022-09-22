@@ -1,5 +1,5 @@
-import { STATUS_CODE } from "../enums/statusCode.enum.js";
-import { DATABASE_COLLECTIONS } from "../enums/databaseCollections.enum.js";
+import { STATUS_CODE } from "../enums/statusCode.Enum.js";
+import { DATABASE_COLLECTIONS } from "../enums/databaseCollections.Enum.js";
 import database from "../database/database.js";
 
 async function postChoice(req, res){
