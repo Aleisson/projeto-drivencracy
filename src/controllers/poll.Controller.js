@@ -1,7 +1,7 @@
 import { STATUS_CODE } from "../enums/statusCode.Enum.js";
 import { DATABASE_COLLECTIONS } from "../enums/databaseCollections.Enum.js";
 import database from "../database/database.js";
-import dayjs from 'dayjs';
+
 
 
 
@@ -13,23 +13,36 @@ async function postPoll(req, res) {
 
     try {
 
-        database.collection(DATABASE_COLLECTIONS.polls).insertOne({ title, expireAt });
+        const poll = await database.collection(DATABASE_COLLECTIONS.POLLS).insertOne({ title, expireAt });
 
-        res.sendStatus(STATUS_CODE.CREATED);
-        
+
+        res.status(STATUS_CODE.CREATED).send({ _id: poll.insertedId, title, expireAt });
+
     } catch (error) {
 
         console.error(error);
+        res.sendStatus(STATUS_CODE.SERVER_ERROR);
 
     }
 
-    res.sendStatus(STATUS_CODE.CREATED);
+
 
 }
 
 async function getPoll(req, res) {
 
-    res.send('<h1>getPoll</h1>');
+    try {
+
+        const polls = await database.collection(DATABASE_COLLECTIONS.POLLS).find({}).toArray();
+        
+        res.status(STATUS_CODE.OK).send(polls);
+        
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(STATUS_CODE.SERVER_ERROR);
+    
+    }
 
 }
 

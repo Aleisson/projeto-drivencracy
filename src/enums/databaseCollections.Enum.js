@@ -1,6 +1,6 @@
 const DATABASE_COLLECTIONS = Object.freeze({
 
-    polls: 'polls',
+    POLLS: 'polls',
    
 })
 
