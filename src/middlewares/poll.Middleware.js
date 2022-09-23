@@ -7,11 +7,12 @@ import dayjs from "dayjs";
 function postPollMiddleware(req, res, next) {
 
     const poll = req.body;
-    
+
     const isValid = postPollSchema.validate(poll);
 
     if (isValid.error) {
-        return res.sendStatus(STATUS_CODE.UNPROCESSABLE);
+        res.sendStatus(STATUS_CODE.UNPROCESSABLE);
+        return;
     }
 
     if (!poll.expireAt) {
