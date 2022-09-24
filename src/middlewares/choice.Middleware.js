@@ -26,15 +26,16 @@ async function postChoiceMiddleware(req, res, next) {
             return;
         }
 
-        const isRepeatedTitle = await database.collection(DATABASE_COLLECTIONS.CHOICES).findOne({ title });
+        const isRepeatedTitle = await database.collection(DATABASE_COLLECTIONS.CHOICES).findOne({ title, pollId});
         console.log('choice ' + isRepeatedTitle)
 
         if (isRepeatedTitle) {
             res.sendStatus(STATUS_CODE.CONFLICT);
             return;
         }
-        console.log(poll.expireAt);
-        console.log((dayjs().diff(dayjs(poll.expireAt))));
+        //console.log(poll.expireAt);
+        //console.log((dayjs().diff(dayjs(poll.expireAt))));
+        
         if(dayjs().diff(dayjs(poll.expireAt)) > 0){
             res.sendStatus(STATUS_CODE.FORBIDDEN);
             return;
