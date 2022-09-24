@@ -17,8 +17,10 @@ async function postChoiceMiddleware(req, res, next) {
     }
 
     try {
-        
-        const poll = await database.collection(DATABASE_COLLECTIONS.POLLS).findOne({ _id: ObjectId(pollId) });
+
+        const poll = await database
+            .collection(DATABASE_COLLECTIONS.POLLS)
+            .findOne({ _id: ObjectId(pollId) });
         //console.log('poll ' + poll);
 
         if (!poll) {
@@ -26,8 +28,10 @@ async function postChoiceMiddleware(req, res, next) {
             return;
         }
 
-        const isRepeatedTitle = await database.collection(DATABASE_COLLECTIONS.CHOICES).findOne({ title, pollId});
-        console.log('choice ' + isRepeatedTitle)
+        const isRepeatedTitle = await database
+            .collection(DATABASE_COLLECTIONS.CHOICES)
+            .findOne({ title, pollId });
+        //console.log('choice ' + isRepeatedTitle)
 
         if (isRepeatedTitle) {
             res.sendStatus(STATUS_CODE.CONFLICT);
@@ -35,13 +39,13 @@ async function postChoiceMiddleware(req, res, next) {
         }
         //console.log(poll.expireAt);
         //console.log((dayjs().diff(dayjs(poll.expireAt))));
-        
-        if(dayjs().diff(dayjs(poll.expireAt)) > 0){
+
+        if (dayjs().diff(dayjs(poll.expireAt)) > 0) {
             res.sendStatus(STATUS_CODE.FORBIDDEN);
             return;
         }
-        
-        res.locals.choice = {title, pollId}
+
+        res.locals.choice = { title, pollId }
         next();
 
 
@@ -54,4 +58,40 @@ async function postChoiceMiddleware(req, res, next) {
 
 }
 
-export {postChoiceMiddleware}
+async function postChoiceIdVoteMiddleware(req, res, next) {
+
+    const choiceId = req.params.id;
+    //console.log(choiceId);
+
+    try {
+
+        const choice = await database
+            .collection(DATABASE_COLLECTIONS.CHOICES)
+            .findOne({ _id: ObjectId(choiceId) });
+
+        if (!choice) {
+            res.sendStatus(STATUS_CODE.NOT_FOUND);
+            return;
+        }
+
+        const poll = await database
+            .collection(DATABASE_COLLECTIONS.POLLS)
+            .findOne({ _id: ObjectId(choice.pollId) });
+
+        //console.log(poll);
+
+        if (dayjs().diff(dayjs(poll.expireAt)) > 0) {
+            res.sendStatus(STATUS_CODE.FORBIDDEN);
+            return;
+        }
+
+        next()
+
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(STATUS_CODE.SERVER_ERROR);
+    }
+
+}
+
+export { postChoiceMiddleware, postChoiceIdVoteMiddleware }

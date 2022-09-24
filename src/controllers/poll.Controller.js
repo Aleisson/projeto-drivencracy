@@ -13,8 +13,9 @@ async function postPoll(req, res) {
 
     try {
 
-        const poll = await database.collection(DATABASE_COLLECTIONS.POLLS).insertOne({ title, expireAt });
-
+        const poll = await database
+            .collection(DATABASE_COLLECTIONS.POLLS)
+            .insertOne({ title, expireAt });
 
         res.status(STATUS_CODE.CREATED).send({ _id: poll.insertedId, title, expireAt });
 
@@ -33,22 +34,40 @@ async function getPoll(req, res) {
 
     try {
 
-        const polls = await database.collection(DATABASE_COLLECTIONS.POLLS).find({}).toArray();
-        
+        const polls = await database
+            .collection(DATABASE_COLLECTIONS.POLLS)
+            .find({}).toArray();
+
         res.status(STATUS_CODE.OK).send(polls);
-        
+
     } catch (error) {
 
         console.error(error);
         res.sendStatus(STATUS_CODE.SERVER_ERROR);
-    
+
     }
 
 }
 
 async function getPollIdChoice(req, res) {
 
-    res.send('<h1>getPollIdChoice</h1>');
+    const { pollId } = res.locals;
+
+    try {
+
+        const choices = await database
+            .collection(DATABASE_COLLECTIONS.CHOICES)
+            .find({ pollId }).toArray();
+
+        res.status(STATUS_CODE.OK).send(choices);
+
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(STATUS_CODE.SERVER_ERROR);
+
+    }
+
 
 }
 

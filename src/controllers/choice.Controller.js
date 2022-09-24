@@ -9,7 +9,9 @@ async function postChoice(req, res) {
     //console.log(pollId);
     try {
 
-        const choice = await database.collection(DATABASE_COLLECTIONS.CHOICES).insertOne({ title, pollId })
+        const choice = await database
+            .collection(DATABASE_COLLECTIONS.CHOICES)
+            .insertOne({ title, pollId })
 
         res.status(STATUS_CODE.CREATED).send({ _id: choice.insertedId, title, pollId })
 

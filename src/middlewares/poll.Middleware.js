@@ -2,7 +2,8 @@ import { postPollSchema } from "../schemas/poll.Schema.js";
 import { STATUS_CODE } from "../enums/statusCode.Enum.js";
 import { DATABASE_COLLECTIONS } from "../enums/databaseCollections.Enum.js";
 import dayjs from "dayjs";
-
+import database from "../database/database.js";
+import { ObjectId } from 'mongodb'
 
 function postPollMiddleware(req, res, next) {
 
@@ -16,12 +17,39 @@ function postPollMiddleware(req, res, next) {
     }
 
     if (!poll.expireAt) {
-        poll.expireAt = dayjs().format('YYYY-MM-DD HH:mm')
+        poll.expireAt = dayjs().add(30, 'day').format('YYYY-MM-DD HH:mm')
     }
+    //console.log(poll.expireAt);
 
     res.locals.poll = poll;
     next();
 
 }
 
-export { postPollMiddleware }
+async function getPollIdChoiceMiddleware(req, res, next) {
+
+    const pollId = req.params.id;
+    //console.log(pollId);
+    try {
+        const hasPoll = await database
+            .collection(DATABASE_COLLECTIONS.POLLS)
+            .findOne({ _id: ObjectId(pollId) })
+        //console.log(hasPoll);
+
+        if (!hasPoll) {
+            res.sendStatus(STATUS_CODE.NOT_FOUND);
+            return;
+        }
+
+        res.locals.pollId = pollId;
+        next();
+
+    } catch (error) {
+        console.error(error)
+        res.sendStatus(STATUS_CODE.SERVER_ERROR);
+    }
+
+
+}
+
+export { postPollMiddleware, getPollIdChoiceMiddleware }
