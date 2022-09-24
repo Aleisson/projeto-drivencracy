@@ -1,6 +1,8 @@
 import { STATUS_CODE } from "../enums/statusCode.Enum.js";
 import { DATABASE_COLLECTIONS } from "../enums/databaseCollections.Enum.js";
 import database from "../database/database.js";
+import dayjs from 'dayjs';
+import { ObjectId } from "mongodb";
 
 async function postChoice(req, res) {
 
@@ -22,9 +24,26 @@ async function postChoice(req, res) {
 
 }
 
-async function postChoiceIdVote(req, res) {
+function postChoiceIdVote(req, res) {
 
-    res.send('<h1>postChoiceIdVote</h1>')
+    const choiceId = res.locals.choiceId;
+    
+
+    try {
+
+        database
+        .collection(DATABASE_COLLECTIONS.VOTES)
+        .insertOne({
+            createAt: dayjs().format('YYYY-MM-DD HH:mm'),
+            choiceId: ObjectId(choiceId)
+        });
+
+        res.sendStatus(STATUS_CODE.CREATED);
+        
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(STATUS_CODE.SERVER_ERROR);
+    }
 
 }
 

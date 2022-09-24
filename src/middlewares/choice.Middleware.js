@@ -85,6 +85,12 @@ async function postChoiceIdVoteMiddleware(req, res, next) {
             return;
         }
 
+
+       
+        //res.locals.choice = choice;
+        //res.locals.poll = poll; 
+        
+        res.locals.choiceId = choiceId;
         next()
 
     } catch (error) {

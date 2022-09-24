@@ -1,7 +1,8 @@
 const DATABASE_COLLECTIONS = Object.freeze({
 
     POLLS: 'polls',
-    CHOICES: 'choices'
+    CHOICES: 'choices',
+    VOTES: 'votes'
    
 })
 
