@@ -26,22 +26,23 @@ function postPollMiddleware(req, res, next) {
 
 }
 
-async function getPollIdChoiceMiddleware(req, res, next) {
+async function getPollIdMiddleware(req, res, next) {
 
     const pollId = req.params.id;
     //console.log(pollId);
     try {
-        const hasPoll = await database
+        const poll = await database
             .collection(DATABASE_COLLECTIONS.POLLS)
             .findOne({ _id: ObjectId(pollId) })
         //console.log(hasPoll);
 
-        if (!hasPoll) {
+        if (!poll) {
             res.sendStatus(STATUS_CODE.NOT_FOUND);
             return;
         }
 
         res.locals.pollId = pollId;
+        res.locals.poll = poll;
         next();
 
     } catch (error) {
@@ -52,4 +53,6 @@ async function getPollIdChoiceMiddleware(req, res, next) {
 
 }
 
-export { postPollMiddleware, getPollIdChoiceMiddleware }
+
+
+export { postPollMiddleware, getPollIdMiddleware }

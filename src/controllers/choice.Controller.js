@@ -13,7 +13,7 @@ async function postChoice(req, res) {
 
         const choice = await database
             .collection(DATABASE_COLLECTIONS.CHOICES)
-            .insertOne({ title, pollId })
+            .insertOne({ title, pollId: ObjectId(pollId) })
 
         res.status(STATUS_CODE.CREATED).send({ _id: choice.insertedId, title, pollId })
 
@@ -39,7 +39,7 @@ function postChoiceIdVote(req, res) {
         });
 
         res.sendStatus(STATUS_CODE.CREATED);
-        
+
     } catch (error) {
         console.error(error);
         res.sendStatus(STATUS_CODE.SERVER_ERROR);
