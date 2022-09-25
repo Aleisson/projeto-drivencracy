@@ -30,8 +30,8 @@ async function postChoiceMiddleware(req, res, next) {
 
         const isRepeatedTitle = await database
             .collection(DATABASE_COLLECTIONS.CHOICES)
-            .findOne({ title, pollId });
-        //console.log('choice ' + isRepeatedTitle)
+            .findOne({ title, pollId: ObjectId(pollId) });
+        console.log('choice ' + isRepeatedTitle)
 
         if (isRepeatedTitle) {
             res.sendStatus(STATUS_CODE.CONFLICT);

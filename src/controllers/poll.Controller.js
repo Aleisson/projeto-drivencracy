@@ -1,6 +1,7 @@
 import { STATUS_CODE } from "../enums/statusCode.Enum.js";
 import { DATABASE_COLLECTIONS } from "../enums/databaseCollections.Enum.js";
 import database from "../database/database.js";
+import { ObjectId } from "mongodb";
 
 
 
@@ -57,7 +58,7 @@ async function getPollIdChoice(req, res) {
 
         const choices = await database
             .collection(DATABASE_COLLECTIONS.CHOICES)
-            .find({ pollId }).toArray();
+            .find({ pollId: ObjectId(pollId) }).toArray();
 
         res.status(STATUS_CODE.OK).send(choices);
 
@@ -74,7 +75,7 @@ async function getPollIdChoice(req, res) {
 async function getPollIdResult(req, res) {
 
     const pollId = res.locals.pollId;
-    //console.log("pollId "+ pollId);
+    console.log("pollId "+ pollId);
     const poll = res.locals.poll;
     //console.log("poll " + poll.title);
 
@@ -82,19 +83,35 @@ async function getPollIdResult(req, res) {
 
         const choices = await database
             .collection(DATABASE_COLLECTIONS.CHOICES)
-            .find({ pollId }).toArray();
+            .find({ pollId:ObjectId(pollId) }).toArray();
 
-        const choicesIds = choices.map(choice => choice._id);
+    
+        const choicesIds = choices?choices.map(choice => choice._id):[];
 
         //console.log("choicesid: " + choicesIds);
         
 
+        // const filterVotes = await database
+        // .collection(DATABASE_COLLECTIONS.VOTES)
+        // .aggregate([
+        //     {$match: {choiceId:{$in: choicesIds}}},
+        //     {$unwind:"$choiceId"}, 
+        //     { $sortByCount:"$choiceId"},
+        //     {"$limit" : 1}])
+        // .toArray();
+
         const filterVotes = await database
         .collection(DATABASE_COLLECTIONS.VOTES)
-        .aggregate([{$match: {choiceId:{$in: choicesIds}}},{$unwind:"$choiceId"}, { $sortByCount:"$choiceId"},{"$limit" : 1}])
+        .aggregate([
+            {$match: {choiceId:{$in: choicesIds}}},
+            {$unwind:"$choiceId"}, 
+            { $sortByCount:"$choiceId"}
+        ])
         .toArray();
 
-        console.log("filterVotes: " + filterVotes.at(0).count);
+
+
+        console.log(filterVotes);
 
         const choiceResult = await database
         .collection(DATABASE_COLLECTIONS.CHOICES)
@@ -123,7 +140,6 @@ async function getPollIdResult(req, res) {
 
 export { postPoll, getPoll, getPollIdChoice, getPollIdResult }
 
-// Deu muito trabalho pra fazer desse jeito, mas da pra fazer direto no banco, desculpa sujeira de código comentado
         // const filterVotes = await database
         // .collection(DATABASE_COLLECTIONS.VOTES)
         // .aggregate([{$match: {choiceId:{$in: choicesIds}}},{$sortBycount: "$_id"}])
