@@ -91,24 +91,16 @@ async function getPollIdResult(req, res) {
         //console.log("choicesid: " + choicesIds);
         
 
-        // const filterVotes = await database
-        // .collection(DATABASE_COLLECTIONS.VOTES)
-        // .aggregate([
-        //     {$match: {choiceId:{$in: choicesIds}}},
-        //     {$unwind:"$choiceId"}, 
-        //     { $sortByCount:"$choiceId"},
-        //     {"$limit" : 1}])
-        // .toArray();
-
         const filterVotes = await database
         .collection(DATABASE_COLLECTIONS.VOTES)
         .aggregate([
             {$match: {choiceId:{$in: choicesIds}}},
             {$unwind:"$choiceId"}, 
-            { $sortByCount:"$choiceId"}
-        ])
+            { $sortByCount:"$choiceId"},
+            {"$limit" : 1}])
         .toArray();
 
+       
 
 
         console.log(filterVotes);
@@ -140,6 +132,7 @@ async function getPollIdResult(req, res) {
 
 export { postPoll, getPoll, getPollIdChoice, getPollIdResult }
 
+//Código para estudos futuros
         // const filterVotes = await database
         // .collection(DATABASE_COLLECTIONS.VOTES)
         // .aggregate([{$match: {choiceId:{$in: choicesIds}}},{$sortBycount: "$_id"}])
@@ -148,4 +141,13 @@ export { postPoll, getPoll, getPollIdChoice, getPollIdResult }
         // const filterVotes = await database
         // .collection(DATABASE_COLLECTIONS.VOTES)
         // .aggregate([{$match: {choiceId:{$in: choicesIds}}},{$unwind:"$choiceId"}, { $sortByCount:"$choiceId"},{"$limit" : 1}])
+        // .toArray();
+
+         // const filterVotes = await database
+        // .collection(DATABASE_COLLECTIONS.VOTES)
+        // .aggregate([
+        //     {$match: {choiceId:{$in: choicesIds}}},
+        //     {$unwind:"$choiceId"}, 
+        //     { $sortByCount:"$choiceId"}
+        // ])
         // .toArray();
