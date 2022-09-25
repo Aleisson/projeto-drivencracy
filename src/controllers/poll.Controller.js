@@ -75,7 +75,7 @@ async function getPollIdChoice(req, res) {
 async function getPollIdResult(req, res) {
 
     const pollId = res.locals.pollId;
-    console.log("pollId "+ pollId);
+    //console.log("pollId "+ pollId);
     const poll = res.locals.poll;
     //console.log("poll " + poll.title);
 
@@ -85,8 +85,11 @@ async function getPollIdResult(req, res) {
             .collection(DATABASE_COLLECTIONS.CHOICES)
             .find({ pollId:ObjectId(pollId) }).toArray();
 
+        //console.log('choices '+ choices)    
+            
     
         const choicesIds = choices?choices.map(choice => choice._id):[];
+
 
         //console.log("choicesid: " + choicesIds);
         
@@ -96,18 +99,15 @@ async function getPollIdResult(req, res) {
         .aggregate([
             {$match: {choiceId:{$in: choicesIds}}},
             {$unwind:"$choiceId"}, 
-            { $sortByCount:"$choiceId"},
-            {"$limit" : 1}])
+            { $sortByCount:"$choiceId"}])
         .toArray();
 
        
+        //console.log(filterVotes);
 
-
-        console.log(filterVotes);
-
-        const choiceResult = await database
+        const choiceResult = filterVotes[0]? await database
         .collection(DATABASE_COLLECTIONS.CHOICES)
-        .findOne({_id: filterVotes.at(0)._id});
+        .findOne({_id: filterVotes.at(0)._id}):[];
 
         
         //res.sendStatus(200)
@@ -116,8 +116,8 @@ async function getPollIdResult(req, res) {
             title: poll.title,
             expireAt: poll.expireAt,
             result:{
-                title:choiceResult.title,
-                votes:filterVotes.at(0).count
+                title:choiceResult?.title,
+                votes:filterVotes.at(0)?.count
             }
 
         });
